@@ -51,7 +51,7 @@ public class PaperInputRegistry implements InputRegistry<Component,AsyncChatEven
                             parser.parse(input).ifPresentOrElse(parsedInput -> {
                                 if (registeredInput.hasExpired() && !registeredInput.shouldIgnoreExpired()) {
                                     if (registeredInput.getExpiredHandler() != null) {
-                                        registeredInput.getExpiredHandler().accept(input);
+                                        registeredInput.getExpiredHandler().accept(input, event);
                                     }
                                     return;
                                 }
@@ -63,15 +63,15 @@ public class PaperInputRegistry implements InputRegistry<Component,AsyncChatEven
                                 }
 
                                 if (event != null) {
-                                    if (registeredInput.getBiInputHandler() != null) {
+                                    if (registeredInput.getInputHandler() != null) {
                                         //noinspection unchecked
-                                        BiConsumer<Object,AsyncChatEvent> handler = (BiConsumer<Object,AsyncChatEvent>) registeredInput.getBiInputHandler();
+                                        BiConsumer<Object,AsyncChatEvent> handler = (BiConsumer<Object,AsyncChatEvent>) registeredInput.getInputHandler();
                                         handler.accept(parsedInput, event);
                                     }
                                 }
                             }, () -> {
                                 if (registeredInput.getMismatchHandler() != null) {
-                                    registeredInput.getMismatchHandler().accept(input);
+                                    registeredInput.getMismatchHandler().accept(input, event);
                                 }
                             });
                         }, () -> onInvalidParser(registeredInput.getRequiredInputType()));
