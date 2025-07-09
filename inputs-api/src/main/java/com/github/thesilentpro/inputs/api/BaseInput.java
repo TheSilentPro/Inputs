@@ -14,10 +14,11 @@ public class BaseInput<T,E,I> implements Input<T,E,I> {
     private final Class<T> requiredInputType;
     private Instant createdAt;
     private Duration duration;
-    private Consumer<T> handler;
-    private BiConsumer<T, E> biHandler;
-    private Consumer<I> mismatchHandler;
-    private Consumer<I> expiredHandler;
+
+    private BiConsumer<T, E> handler;
+    private BiConsumer<I,E> mismatchHandler;
+    private BiConsumer<I,E> expiredHandler;
+
     private boolean ignoreExpired;
 
     public BaseInput(Class<T> requiredInputType) {
@@ -34,24 +35,36 @@ public class BaseInput<T,E,I> implements Input<T,E,I> {
 
     @Override
     public Input<T,E,I> then(Consumer<T> handler) {
-        this.handler = handler;
+        this.handler = (t, e) -> handler.accept(t);
         return this;
     }
 
     @Override
     public Input<T,E,I> then(BiConsumer<T,E> handler) {
-        this.biHandler = handler;
+        this.handler = handler;
         return this;
     }
 
     @Override
     public Input<T,E,I> mismatch(Consumer<I> handler) {
+        this.mismatchHandler = (i, e) -> handler.accept(i);
+        return this;
+    }
+
+    @Override
+    public Input<T, E, I> mismatch(BiConsumer<I, E> handler) {
         this.mismatchHandler = handler;
         return this;
     }
 
     @Override
     public Input<T,E,I> expired(Consumer<I> handler) {
+        this.expiredHandler = (i, e) -> handler.accept(i);
+        return this;
+    }
+
+    @Override
+    public Input<T, E, I> expired(BiConsumer<I, E> handler) {
         this.expiredHandler = handler;
         return this;
     }
@@ -87,22 +100,17 @@ public class BaseInput<T,E,I> implements Input<T,E,I> {
     }
 
     @Override
-    public Consumer<T> getInputHandler() {
+    public BiConsumer<T,E> getInputHandler() {
         return handler;
     }
 
     @Override
-    public BiConsumer<T,E> getBiInputHandler() {
-        return biHandler;
-    }
-
-    @Override
-    public Consumer<I> getMismatchHandler() {
+    public BiConsumer<I,E> getMismatchHandler() {
         return mismatchHandler;
     }
 
     @Override
-    public Consumer<I> getExpiredHandler() {
+    public BiConsumer<I,E> getExpiredHandler() {
         return expiredHandler;
     }
 

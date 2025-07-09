@@ -127,12 +127,28 @@ public interface Input<T,E,I> {
     Input<T,E,I> mismatch(Consumer<I> handler);
 
     /**
+     * Sets a handler to be executed when the input does not match the expected format.
+     *
+     * @param handler The handler that processes the mismatch event.
+     * @return The updated input instance with the mismatch handler applied.
+     */
+    Input<T,E,I> mismatch(BiConsumer<I,E> handler);
+
+    /**
      * Sets a handler to be executed when the input has expired.
      *
      * @param handler The handler that processes the expiration event.
      * @return The updated input instance with the expiration handler applied.
      */
     Input<T,E,I> expired(Consumer<I> handler);
+
+    /**
+     * Sets a handler to be executed when the input has expired.
+     *
+     * @param handler The handler that processes the expiration event.
+     * @return The updated input instance with the expiration handler applied.
+     */
+    Input<T,E,I> expired(BiConsumer<I,E> handler);
 
     /**
      * Sets the timestamp at which the input was created.
@@ -185,29 +201,21 @@ public interface Input<T,E,I> {
      *
      * @return The consumer that handles the expected input.
      */
-    Consumer<T> getInputHandler();
-
-    /**
-     * Gets the handler that processes the successful input with an additional
-     * {@link E}.
-     *
-     * @return The bi-consumer that handles the input and the event.
-     */
-    BiConsumer<T, E> getBiInputHandler();
+    BiConsumer<T,E> getInputHandler();
 
     /**
      * Gets the handler that processes a mismatch in the input.
      *
      * @return The consumer that handles the mismatch event.
      */
-    Consumer<I> getMismatchHandler();
+    BiConsumer<I,E> getMismatchHandler();
 
     /**
      * Gets the handler that processes an expired input.
      *
      * @return The consumer that handles the expiration event.
      */
-    Consumer<I> getExpiredHandler();
+    BiConsumer<I,E> getExpiredHandler();
 
     /**
      * Gets the class type of the expected input.

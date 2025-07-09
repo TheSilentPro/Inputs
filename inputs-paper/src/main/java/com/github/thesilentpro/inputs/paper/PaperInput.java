@@ -78,26 +78,44 @@ public class PaperInput<T> extends BaseInput<T, AsyncChatEvent, Component> {
         return this;
     }
 
+    // then with Consumer<T>
     @Override
     public PaperInput<T> then(Consumer<T> handler) {
         super.then(handler);
         return this;
     }
 
+    // then with BiConsumer<T, AsyncChatEvent>
     @Override
     public PaperInput<T> then(BiConsumer<T, AsyncChatEvent> handler) {
         super.then(handler);
         return this;
     }
 
+    // mismatch with Consumer<Component>
     @Override
     public PaperInput<T> mismatch(Consumer<Component> handler) {
         super.mismatch(handler);
         return this;
     }
 
+    // mismatch with BiConsumer<Component, AsyncChatEvent>
+    @Override
+    public PaperInput<T> mismatch(BiConsumer<Component, AsyncChatEvent> handler) {
+        super.mismatch(handler);
+        return this;
+    }
+
+    // expired with Consumer<Component>
     @Override
     public PaperInput<T> expired(Consumer<Component> handler) {
+        super.expired(handler);
+        return this;
+    }
+
+    // expired with BiConsumer<Component, AsyncChatEvent>
+    @Override
+    public PaperInput<T> expired(BiConsumer<Component, AsyncChatEvent> handler) {
         super.expired(handler);
         return this;
     }
