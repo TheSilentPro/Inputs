@@ -58,16 +58,8 @@ public class PaperInputRegistry implements InputRegistry<Component,AsyncChatEven
 
                                 if (registeredInput.getInputHandler() != null) {
                                     //noinspection unchecked
-                                    Consumer<Object> handler = (Consumer<Object>) registeredInput.getInputHandler();
-                                    handler.accept(parsedInput);
-                                }
-
-                                if (event != null) {
-                                    if (registeredInput.getInputHandler() != null) {
-                                        //noinspection unchecked
-                                        BiConsumer<Object,AsyncChatEvent> handler = (BiConsumer<Object,AsyncChatEvent>) registeredInput.getInputHandler();
-                                        handler.accept(parsedInput, event);
-                                    }
+                                    BiConsumer<Object,AsyncChatEvent> handler = (BiConsumer<Object,AsyncChatEvent>) registeredInput.getInputHandler();
+                                    handler.accept(parsedInput, event);
                                 }
                             }, () -> {
                                 if (registeredInput.getMismatchHandler() != null) {
